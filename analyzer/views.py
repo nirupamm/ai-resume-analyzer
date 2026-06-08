@@ -10,6 +10,16 @@ from .models import ResumeAnalysis
 from django.db.models import Avg, Max, Min
 from rest_framework.views import APIView
 from .services.llm_service import analyze_resume, rewrite_resume
+from .serializers import (
+    ResumeUploadSerializer,
+    ResumeAnalysisSerializer,
+    CoverLetterSerializer
+)
+from .services.llm_service import (
+    analyze_resume,
+    rewrite_resume,
+    generate_cover_letter
+)
 
 class ResumeUploadView(APIView):
     def post(self, request):
@@ -108,6 +118,55 @@ class ResumeRewriteView(APIView):
                     "success": True,
                     "filename": resume_file.name,
                     "rewrite": rewrite
+                })
+
+            except Exception as e:
+                return Response(
+                    {
+                        "success": False,
+                        "error": str(e)
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class CoverLetterView(APIView):
+    def post(self, request):
+        serializer = CoverLetterSerializer(data=request.data)
+
+        if serializer.is_valid():
+            resume_file = serializer.validated_data["resume"]
+            job_description = serializer.validated_data["job_description"]
+            company_name = serializer.validated_data.get("company_name", "")
+            role_title = serializer.validated_data.get("role_title", "")
+
+            try:
+                extracted_text = extract_text(resume_file)
+
+                if not extracted_text:
+                    return Response(
+                        {
+                            "success": False,
+                            "error": "No readable text found in the resume."
+                        },
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+                cover_letter = generate_cover_letter(
+                    resume_text=extracted_text[:2500],
+                    job_description=job_description[:1500],
+                    company_name=company_name,
+                    role_title=role_title
+                )
+
+                return Response({
+                    "success": True,
+                    "filename": resume_file.name,
+                    "cover_letter": cover_letter
                 })
 
             except Exception as e:

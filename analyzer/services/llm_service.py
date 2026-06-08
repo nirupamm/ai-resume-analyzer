@@ -186,3 +186,75 @@ Resume:
             "final_recommendations": [],
             "raw_response": raw_response
         }
+    
+def generate_cover_letter(
+    resume_text,
+    job_description,
+    company_name="",
+    role_title=""
+):
+    prompt = f"""
+You are a professional career coach and cover letter writer.
+
+Generate a tailored cover letter using the candidate resume and job description.
+
+Return ONLY valid JSON.
+Do not include markdown.
+Do not include explanation outside JSON.
+
+Use this exact JSON structure:
+
+{{
+  "cover_letter": "",
+  "key_points_used": [],
+  "tone": "",
+  "suggestions": []
+}}
+
+Rules:
+- Keep the cover letter professional and concise
+- Tailor it to the job description
+- Do not invent fake experience
+- Use the company name if provided
+- Use the role title if provided
+- Keep it between 250 and 400 words
+
+Candidate Resume:
+{resume_text}
+
+Job Description:
+{job_description}
+
+Company Name:
+{company_name}
+
+Role Title:
+{role_title}
+"""
+
+    response = requests.post(
+        "http://localhost:11434/api/generate",
+        json={
+            "model": "qwen2.5-coder:7b",
+            "prompt": prompt,
+            "stream": False
+        },
+        timeout=300
+    )
+
+    response.raise_for_status()
+
+    result = response.json()
+    raw_response = result.get("response", "")
+
+    try:
+        return extract_json_from_response(raw_response)
+
+    except Exception:
+        return {
+            "cover_letter": "",
+            "key_points_used": [],
+            "tone": "",
+            "suggestions": [],
+            "raw_response": raw_response
+        }
