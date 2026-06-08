@@ -13,6 +13,7 @@ class ResumeUploadView(APIView):
 
         if serializer.is_valid():
             resume_file = serializer.validated_data["resume"]
+            job_description = serializer.validated_data.get("job_description", "")
 
             try:
                 extracted_text = extract_text(resume_file)
@@ -26,7 +27,10 @@ class ResumeUploadView(APIView):
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
-                analysis = analyze_resume(extracted_text[:4000])
+                analysis = analyze_resume(
+                    resume_text=extracted_text[:2000],
+                    job_description=job_description[:1200]
+                )
 
                 return Response({
                     "success": True,

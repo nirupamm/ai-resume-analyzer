@@ -4,28 +4,61 @@ import re
 
 
 def extract_json_from_response(text):
-    """
-    Extracts JSON even if the LLM adds extra text or markdown.
-    """
-
     text = text.strip()
-
-    # Remove markdown code block if present
     text = text.replace("```json", "").replace("```", "").strip()
 
-    # Find first JSON object
     match = re.search(r"\{.*\}", text, re.DOTALL)
 
     if not match:
         raise ValueError("No valid JSON object found in LLM response.")
 
-    json_text = match.group(0)
-
-    return json.loads(json_text)
+    return json.loads(match.group(0))
 
 
-def analyze_resume(resume_text):
-    prompt = f"""
+def analyze_resume(resume_text, job_description=""):
+    if job_description:
+        prompt = f"""
+You are an expert ATS resume analyzer and technical recruiter.
+
+Compare the resume with the job description.
+
+Return ONLY valid JSON.
+Do not include markdown.
+Do not include explanation outside JSON.
+
+Use this exact JSON structure:
+
+{{
+  "resume_score": 0,
+  "job_match_score": 0,
+  "summary": "",
+  "matched_skills": [],
+  "missing_skills": [],
+  "strengths": [],
+  "weaknesses": [],
+  "ats_tips": [],
+  "job_specific_recommendations": [],
+  "improved_summary": "",
+  "recommended_roles": [],
+  "project_suggestions": []
+}}
+
+Rules:
+- resume_score must be 0 to 100
+- job_match_score must be 0 to 100
+- matched_skills should come from both resume and job description
+- missing_skills should be skills required by the job but missing in resume
+- job_specific_recommendations should explain how to improve the resume for this job
+- Keep all answers practical and specific
+
+Resume:
+{resume_text}
+
+Job Description:
+{job_description}
+"""
+    else:
+        prompt = f"""
 You are an expert ATS resume analyzer and career coach.
 
 Analyze the resume below and return ONLY valid JSON.
@@ -35,26 +68,27 @@ Do not include explanation outside JSON.
 Use this exact JSON structure:
 
 {{
-  "score": 0,
+  "resume_score": 0,
+  "job_match_score": null,
   "summary": "",
+  "matched_skills": [],
+  "missing_skills": [],
   "strengths": [],
   "weaknesses": [],
-  "missing_skills": [],
   "ats_tips": [],
+  "job_specific_recommendations": [],
   "improved_summary": "",
   "recommended_roles": [],
   "project_suggestions": []
 }}
 
 Rules:
-- score must be a number from 0 to 100
+- resume_score must be a number from 0 to 100
+- job_match_score must be null because no job description was provided
 - strengths should include 3 to 5 points
 - weaknesses should include 3 to 5 points
 - missing_skills should include useful technical skills
 - ats_tips should be practical and specific
-- improved_summary should be a polished resume summary
-- recommended_roles should match the candidate profile
-- project_suggestions should suggest portfolio projects
 
 Resume:
 {resume_text}
@@ -63,11 +97,11 @@ Resume:
     response = requests.post(
         "http://localhost:11434/api/generate",
         json={
-            "model": "gemma4:latest",
+            "model": "qwen2.5-coder:7b",
             "prompt": prompt,
             "stream": False
         },
-        timeout=180
+        timeout=300
     )
 
     response.raise_for_status()
@@ -80,12 +114,15 @@ Resume:
 
     except Exception:
         return {
-            "score": None,
+            "resume_score": None,
+            "job_match_score": None,
             "summary": "The AI response could not be converted into structured JSON.",
+            "matched_skills": [],
+            "missing_skills": [],
             "strengths": [],
             "weaknesses": [],
-            "missing_skills": [],
             "ats_tips": [],
+            "job_specific_recommendations": [],
             "improved_summary": "",
             "recommended_roles": [],
             "project_suggestions": [],
