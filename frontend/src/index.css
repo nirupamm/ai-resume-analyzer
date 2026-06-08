@@ -106,3 +106,83 @@ button:disabled {
 .history-table tr:hover {
   background: #f3f4f6;
 }
+.home-page {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #ffffff, #eef4ff);
+  border-radius: 20px;
+  padding: 4rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.badge {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1d4ed8;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  max-width: 800px;
+  margin-bottom: 1rem;
+}
+
+.hero-text {
+  font-size: 1.1rem;
+  color: #4b5563;
+  max-width: 760px;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.primary-link,
+.secondary-link {
+  text-decoration: none;
+  padding: 0.9rem 1.3rem;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.primary-link {
+  background: #2563eb;
+  color: white;
+}
+
+.secondary-link {
+  background: white;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.feature-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.feature-card p {
+  color: #6b7280;
+  line-height: 1.6;
+}
