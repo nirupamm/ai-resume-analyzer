@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.generics import ListAPIView
+from .serializers import ResumeAnalysisSerializer
 from .serializers import ResumeUploadSerializer
 from .services.text_extractor import extract_text
 from .services.llm_service import analyze_resume
@@ -57,3 +58,7 @@ class ResumeUploadView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+    
+class ResumeAnalysisListView(ListAPIView):
+    queryset = ResumeAnalysis.objects.all().order_by("-created_at")
+    serializer_class = ResumeAnalysisSerializer

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import ResumeAnalysis
 
 
 class ResumeUploadSerializer(serializers.Serializer):
@@ -7,3 +8,9 @@ class ResumeUploadSerializer(serializers.Serializer):
         required=False,
         allow_blank=True
     )
+
+
+class ResumeAnalysisSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ResumeAnalysis
+        fields = "__all__"
