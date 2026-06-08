@@ -7,6 +7,8 @@ export default function AnalyzeResume() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const analysis = result?.analysis;
+
   const handleAnalyze = async (e) => {
     e.preventDefault();
 
@@ -21,66 +23,100 @@ export default function AnalyzeResume() {
 
     try {
       setLoading(true);
+      setResult(null);
 
       const data = await analyzeResume(formData);
-
       setResult(data);
     } catch (error) {
       console.error(error);
-      alert("Analysis failed.");
+      alert("Analysis failed. Make sure Django and Ollama are running.");
     } finally {
       setLoading(false);
     }
   };
 
+  const renderList = (title, items) => (
+    <div className="result-card">
+      <h3>{title}</h3>
+      {items && items.length > 0 ? (
+        <ul>
+          {items.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No data available.</p>
+      )}
+    </div>
+  );
+
   return (
-    <div style={{ padding: "2rem" }}>
+    <div className="page-container">
       <h1>Analyze Resume</h1>
+      <p className="subtitle">
+        Upload your resume and optionally paste a job description to check your match score.
+      </p>
 
-      <form onSubmit={handleAnalyze}>
-        <div>
-          <label>Resume (PDF/DOCX)</label>
-          <br />
-          <input
-            type="file"
-            accept=".pdf,.doc,.docx"
-            onChange={(e) => setResume(e.target.files[0])}
-          />
-        </div>
+      <form onSubmit={handleAnalyze} className="form-card">
+        <label>Resume File</label>
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx"
+          onChange={(e) => setResume(e.target.files[0])}
+        />
 
-        <br />
-
-        <div>
-          <label>Job Description (Optional)</label>
-          <br />
-          <textarea
-            rows="8"
-            cols="70"
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-          />
-        </div>
-
-        <br />
+        <label>Job Description Optional</label>
+        <textarea
+          rows="8"
+          placeholder="Paste job description here..."
+          value={jobDescription}
+          onChange={(e) => setJobDescription(e.target.value)}
+        />
 
         <button type="submit" disabled={loading}>
           {loading ? "Analyzing..." : "Analyze Resume"}
         </button>
       </form>
 
-      {result && (
-        <div style={{ marginTop: "2rem" }}>
-          <h2>Analysis Result</h2>
+      {analysis && (
+        <div className="results-section">
+          <h2>Analysis Results</h2>
 
-          <pre
-            style={{
-              background: "#f4f4f4",
-              padding: "1rem",
-              overflowX: "auto",
-            }}
-          >
-            {JSON.stringify(result, null, 2)}
-          </pre>
+          <div className="score-grid">
+            <div className="score-card">
+              <h3>Resume Score</h3>
+              <p>{analysis.resume_score ?? "N/A"}/100</p>
+            </div>
+
+            <div className="score-card">
+              <h3>Job Match Score</h3>
+              <p>{analysis.job_match_score ?? "N/A"}/100</p>
+            </div>
+          </div>
+
+          <div className="result-card">
+            <h3>Summary</h3>
+            <p>{analysis.summary || "No summary available."}</p>
+          </div>
+
+          <div className="result-grid">
+            {renderList("Matched Skills", analysis.matched_skills)}
+            {renderList("Missing Skills", analysis.missing_skills)}
+            {renderList("Strengths", analysis.strengths)}
+            {renderList("Weaknesses", analysis.weaknesses)}
+            {renderList("ATS Tips", analysis.ats_tips)}
+            {renderList(
+              "Job Specific Recommendations",
+              analysis.job_specific_recommendations
+            )}
+            {renderList("Recommended Roles", analysis.recommended_roles)}
+            {renderList("Project Suggestions", analysis.project_suggestions)}
+          </div>
+
+          <div className="result-card">
+            <h3>Improved Summary</h3>
+            <p>{analysis.improved_summary || "No improved summary available."}</p>
+          </div>
         </div>
       )}
     </div>
