@@ -581,3 +581,38 @@ button:disabled {
     padding: 2rem;
   }
 }
+.file-upload {
+  border: 1.5px dashed var(--border);
+  background: var(--surface-soft);
+  border-radius: 18px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.file-upload:hover {
+  border-color: var(--primary);
+  background: #eef2ff;
+}
+
+.file-upload input {
+  display: none;
+}
+
+.file-upload-title {
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.file-upload-subtitle {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.file-name {
+  margin-top: 0.8rem;
+  color: var(--primary);
+  font-weight: 700;
+}

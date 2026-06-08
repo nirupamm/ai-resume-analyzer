@@ -58,12 +58,18 @@ export default function AnalyzeResume() {
       </p>
 
       <form onSubmit={handleAnalyze} className="form-card">
-        <label>Resume File</label>
-        <input
-          type="file"
-          accept=".pdf,.doc,.docx"
-          onChange={(e) => setResume(e.target.files[0])}
-        />
+       <label className="file-upload">
+  <input
+    type="file"
+    accept=".pdf,.doc,.docx"
+    onChange={(e) => setResume(e.target.files[0])}
+  />
+
+  <div className="file-upload-title">Upload your resume</div>
+  <p className="file-upload-subtitle">PDF or DOCX up to 10MB</p>
+
+  {resume && <div className="file-name">{resume.name}</div>}
+</label>
 
         <label>Job Description Optional</label>
         <textarea

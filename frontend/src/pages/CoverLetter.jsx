@@ -56,13 +56,18 @@ export default function CoverLetter() {
       </p>
 
       <form onSubmit={handleGenerate} className="form-card">
-        <label>Resume</label>
+        <label className="file-upload">
+  <input
+    type="file"
+    accept=".pdf,.doc,.docx"
+    onChange={(e) => setResume(e.target.files[0])}
+  />
 
-        <input
-          type="file"
-          accept=".pdf,.doc,.docx"
-          onChange={(e) => setResume(e.target.files[0])}
-        />
+  <div className="file-upload-title">Upload your resume</div>
+  <p className="file-upload-subtitle">PDF or DOCX up to 10MB</p>
+
+  {resume && <div className="file-name">{resume.name}</div>}
+</label>
 
         <label>Company Name</label>
 
