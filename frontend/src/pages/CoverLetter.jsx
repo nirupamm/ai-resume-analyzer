@@ -101,8 +101,8 @@ export default function CoverLetter() {
           <div className="result-card">
             <h2>Generated Cover Letter</h2>
 
-            <button onClick={copyToClipboard}>
-              Copy Cover Letter
+            <button className="copy-button" onClick={copyToClipboard}>
+                Copy Cover Letter
             </button>
 
             <hr />

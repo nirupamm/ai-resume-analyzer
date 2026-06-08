@@ -224,3 +224,60 @@ button:disabled {
   color: #2563eb;
   font-weight: bold;
 }
+.loading-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.error-text {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.success-text {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.copy-button {
+  margin-bottom: 1rem;
+  background: #16a34a;
+}
+
+.copy-button:hover {
+  background: #15803d;
+}
+
+button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero-section {
+    padding: 2rem;
+  }
+
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .page-container {
+    padding: 1rem;
+  }
+}
