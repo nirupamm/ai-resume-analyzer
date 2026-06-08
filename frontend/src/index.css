@@ -186,3 +186,41 @@ button:disabled {
   color: #6b7280;
   line-height: 1.6;
 }
+.navbar {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-brand {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #1d4ed8;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: #2563eb;
+}
+
+.active-link {
+  color: #2563eb;
+  font-weight: bold;
+}
