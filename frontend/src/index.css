@@ -86,3 +86,23 @@ button:disabled {
 .result-card li {
   margin-bottom: 0.5rem;
 }
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history-table th,
+.history-table td {
+  padding: 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.history-table th {
+  background: #f9fafb;
+  font-weight: bold;
+}
+
+.history-table tr:hover {
+  background: #f3f4f6;
+}
