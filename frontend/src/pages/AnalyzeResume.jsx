@@ -38,6 +38,7 @@ export default function AnalyzeResume() {
   const renderList = (title, items) => (
     <div className="result-card">
       <h3>{title}</h3>
+
       {items && items.length > 0 ? (
         <ul>
           {items.map((item, index) => (
@@ -53,23 +54,25 @@ export default function AnalyzeResume() {
   return (
     <div className="page-container">
       <h1>Analyze Resume</h1>
+
       <p className="subtitle">
-        Upload your resume and optionally paste a job description to check your match score.
+        Upload your resume and optionally paste a job description to check your
+        match score.
       </p>
 
       <form onSubmit={handleAnalyze} className="form-card">
-       <label className="file-upload">
-  <input
-    type="file"
-    accept=".pdf,.doc,.docx"
-    onChange={(e) => setResume(e.target.files[0])}
-  />
+        <label className="file-upload">
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={(e) => setResume(e.target.files[0])}
+          />
 
-  <div className="file-upload-title">Upload your resume</div>
-  <p className="file-upload-subtitle">PDF or DOCX up to 10MB</p>
+          <div className="file-upload-title">Upload your resume</div>
+          <p className="file-upload-subtitle">PDF or DOCX up to 10MB</p>
 
-  {resume && <div className="file-name">{resume.name}</div>}
-</label>
+          {resume && <div className="file-name">{resume.name}</div>}
+        </label>
 
         <label>Job Description Optional</label>
         <textarea
@@ -83,6 +86,38 @@ export default function AnalyzeResume() {
           {loading ? "Analyzing..." : "Analyze Resume"}
         </button>
       </form>
+
+      {loading && (
+        <div className="ai-loader">
+          <h3>Analyzing your resume...</h3>
+
+          <p className="subtitle">
+            This can take a little while because the analysis is running locally.
+          </p>
+
+          <div className="loader-steps">
+            <div className="loader-step">
+              <span className="loader-dot"></span>
+              Extracting resume content
+            </div>
+
+            <div className="loader-step">
+              <span className="loader-dot"></span>
+              Checking ATS structure
+            </div>
+
+            <div className="loader-step">
+              <span className="loader-dot"></span>
+              Matching job description
+            </div>
+
+            <div className="loader-step">
+              <span className="loader-dot"></span>
+              Generating recommendations
+            </div>
+          </div>
+        </div>
+      )}
 
       {analysis && (
         <div className="results-section">
@@ -121,7 +156,9 @@ export default function AnalyzeResume() {
 
           <div className="result-card">
             <h3>Improved Summary</h3>
-            <p>{analysis.improved_summary || "No improved summary available."}</p>
+            <p>
+              {analysis.improved_summary || "No improved summary available."}
+            </p>
           </div>
         </div>
       )}

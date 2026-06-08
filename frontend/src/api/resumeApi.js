@@ -29,3 +29,8 @@ export const getStats = async () => {
   const response = await axios.get(`${API_BASE_URL}/stats/`);
   return response.data;
 };
+
+export const getAnalysisById = async (id) => {
+  const response = await axios.get(`${API_BASE_URL}/analyses/${id}/`);
+  return response.data;
+};
