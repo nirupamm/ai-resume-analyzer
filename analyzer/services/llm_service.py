@@ -128,3 +128,61 @@ Resume:
             "project_suggestions": [],
             "raw_response": raw_response
         }
+def rewrite_resume(resume_text):
+    prompt = f"""
+You are an expert resume writer and ATS optimization specialist.
+
+Rewrite and improve the resume content below.
+
+Return ONLY valid JSON.
+Do not include markdown.
+Do not include explanation outside JSON.
+
+Use this exact JSON structure:
+
+{{
+  "improved_summary": "",
+  "improved_skills_section": [],
+  "improved_experience_bullets": [],
+  "ats_keywords_to_add": [],
+  "final_recommendations": []
+}}
+
+Rules:
+- Make the summary professional and concise
+- Improve bullet points using action verbs
+- Add measurable impact where possible
+- Keep suggestions realistic based on the resume
+- Do not invent fake companies, degrees, or experience
+
+Resume:
+{resume_text}
+"""
+
+    response = requests.post(
+        "http://localhost:11434/api/generate",
+        json={
+            "model": "qwen2.5-coder:7b",
+            "prompt": prompt,
+            "stream": False
+        },
+        timeout=300
+    )
+
+    response.raise_for_status()
+
+    result = response.json()
+    raw_response = result.get("response", "")
+
+    try:
+        return extract_json_from_response(raw_response)
+
+    except Exception:
+        return {
+            "improved_summary": "",
+            "improved_skills_section": [],
+            "improved_experience_bullets": [],
+            "ats_keywords_to_add": [],
+            "final_recommendations": [],
+            "raw_response": raw_response
+        }
