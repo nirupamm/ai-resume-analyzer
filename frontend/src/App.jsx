@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
+import AppLayout from "./components/AppLayout";
 
 import Home from "./pages/Home";
 import AnalyzeResume from "./pages/AnalyzeResume";
@@ -12,15 +12,15 @@ import Dashboard from "./pages/Dashboard";
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/analyze" element={<AnalyzeResume />} />
-        <Route path="/rewrite" element={<RewriteResume />} />
-        <Route path="/cover-letter" element={<CoverLetter />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/analyze" element={<AnalyzeResume />} />
+          <Route path="/rewrite" element={<RewriteResume />} />
+          <Route path="/cover-letter" element={<CoverLetter />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
