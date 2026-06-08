@@ -4,6 +4,7 @@ from rest_framework import status
 
 from .serializers import ResumeUploadSerializer
 from .services.text_extractor import extract_text
+from .services.llm_service import analyze_resume
 
 
 class ResumeUploadView(APIView):
@@ -18,21 +19,31 @@ class ResumeUploadView(APIView):
 
                 if not extracted_text:
                     return Response(
-                        {"success": False, "error": "No readable text found in the resume."},
+                        {
+                            "success": False,
+                            "error": "No readable text found in the resume."
+                        },
                         status=status.HTTP_400_BAD_REQUEST
                     )
+
+                analysis = analyze_resume(extracted_text[:4000])
 
                 return Response({
                     "success": True,
                     "filename": resume_file.name,
-                    "text_preview": extracted_text[:1000],
-                    "character_count": len(extracted_text)
+                    "analysis": analysis
                 })
 
             except Exception as e:
                 return Response(
-                    {"success": False, "error": str(e)},
+                    {
+                        "success": False,
+                        "error": str(e)
+                    },
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
