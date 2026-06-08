@@ -5,7 +5,7 @@ from rest_framework import status
 from .serializers import ResumeUploadSerializer
 from .services.text_extractor import extract_text
 from .services.llm_service import analyze_resume
-
+from .models import ResumeAnalysis
 
 class ResumeUploadView(APIView):
     def post(self, request):
@@ -30,6 +30,12 @@ class ResumeUploadView(APIView):
                 analysis = analyze_resume(
                     resume_text=extracted_text[:2000],
                     job_description=job_description[:1200]
+                )
+                ResumeAnalysis.objects.create(
+                     filename=resume_file.name,
+                     resume_score=analysis.get("resume_score"),
+                    job_match_score=analysis.get("job_match_score"),
+                    analysis=analysis
                 )
 
                 return Response({
